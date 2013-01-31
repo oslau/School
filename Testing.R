@@ -74,16 +74,17 @@ move = function(grid, time){
 	}
 	potential = next.pos(car.pos, direction)
 	##check next pos
+	new.grid = swap(car.pos, potential)
+	velocity = totcells - sum(grid == new.grid)
 }
 
-check = function(car.pos, potential){
+swap = function(car.pos, potential){
 	values = apply(potential, 1, function(x) grid[x[1], x[2]])
 	t = which(values == 0)
 	swap = cbind(empty = potential[t,], hasCar = car.pos[t,])
-	velocity = length(t)
-	for(i in 1:velocity){
+	for(i in 1:length(t)){
 		grid[swap[i,1], swap[i,2]] = grid[swap[i,3], swap[i,4]]
 		grid[swap[i,3], swap[i,4]] = 0
 	}
-	
+	return(grid)
 }
