@@ -65,12 +65,10 @@ move = function(grid, time){
 	if(time %% 2 == 0){		##red cars
 		direction = "right"
 		car.pos = which(grid == 2, arr.ind = TRUE)
-		val = 2
 	}
 	else{		##blue cars
 		direction = "up"
 		car.pos = which(grid == 1, arr.ind = TRUE)
-		val = 1
 	}
 	potential = next.pos(car.pos, direction)
 	##check next pos
@@ -78,7 +76,7 @@ move = function(grid, time){
 	velocity = totcells - sum(grid == new.grid)
 }
 
-swap = function(car.pos, potential){
+swap = function(car.pos, potential, grid){
 	values = apply(potential, 1, function(x) grid[x[1], x[2]])
 	t = which(values == 0)
 	swap = cbind(empty = potential[t,], hasCar = car.pos[t,])
