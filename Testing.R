@@ -36,56 +36,54 @@ General idea:
 ##move cars by checking if space is available
 
 ##This function changes the coordinates according to specified direction
-next.pos = function(i, j, direction){
-	ij = switch(direction,
-		right = c(i, (j+1)),
-		up = c((i+1), j),
-		c(i, j)
+next.pos = function(ij, direction){
+	pos = switch(direction,
+		right = cbind(ij[,1], ij[,2]+1),
+		up = cbind(ij[,1]-1, ij[,2])
 	)
-	ij = off.grid(ij)
-	return(ij)}
+	pos = off.grid(pos)
+	return(pos)}
 
 ##This function checks if the move generated aboce is off the grid
 ##If so, it will wrap around.
 off.grid = function(ij){
-	i = ij[1]
-	j = ij[2]
-	if(i > grid.r)
-		i = 1
-	else
-		if(i < 1)
-			i = grid.r
-	if(j > grid.c)
-		j = 1
-	else
-		if(i < 1)
-			i = grid.c
-	c(i, j)
+	ij[ij[ , 1] > grid.r, 1] = 1
+	ij[ij[ , 1] == 0, 1] = grid.r
+	ij[ij[ , 2] > grid.c, 2] = 1
+	ij[ij[ , 2] == 0, 2] = grid.c
+	return(ij)
 }
 
-##This function implements the car movement at time t
-move = function(grid, direction){
-	i = dim(grid[1])
-	j = dim(grid[2])
-	curr.pos = dat[i,j]
-	next.pos = next.move(curr.pos, direction)
-	next.pos = off.grid(next.pos)
-	check = any(dat[,"x"] == next.pos[,"x"] & dat[,"y"] == next.pos[,"y"])
-	if(check == FALSE){
-		curr.pos = next.pos
-	}
-	return(curr.pos)
-}
+#GENERAL FUNCTION
+#swap = function(empty.spot, car.spot){
+#	grid[empty.spot[1], empty.spot[2]] = grid[car.spot[1], car.spot[2]]
+#	grid[car.spot[1], car.spot[2]] = 0
+#	return(grid)
+#}
 
 move = function(grid, time){
-	if(x %% 2 == 0){		##red cars
+	if(time %% 2 == 0){		##red cars
 		direction = "right"
-		
+		car.pos = which(grid == 2, arr.ind = TRUE)
+		val = 2
 	}
 	else{		##blue cars
 		direction = "up"
-		blue = which(grid == 2, arr.ind = TRUE)
-		
+		car.pos = which(grid == 1, arr.ind = TRUE)
+		val = 1
+	}
+	potential = next.pos(car.pos, direction)
+	##check next pos
+}
+
+check = function(car.pos, potential){
+	values = apply(potential, 1, function(x) grid[x[1], x[2]])
+	t = which(values == 0)
+	swap = cbind(empty = potential[t,], hasCar = car.pos[t,])
+	velocity = length(t)
+	for(i in 1:velocity){
+		grid[swap[i,1], swap[i,2]] = grid[swap[i,3], swap[i,4]]
+		grid[swap[i,3], swap[i,4]] = 0
 	}
 	
 }
