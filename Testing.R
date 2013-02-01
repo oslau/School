@@ -67,19 +67,19 @@ move = function(grid, time){
 	return(new.grid)
 }
 
-simTraffic = function(grid, t = 100, movie = FALSE){
+simTraffic = function(grid, t = 100){
 	velocity = integer(t)
-	if(movie == TRUE){
-		png(file = "BML%03d.png", width = 300, height = 300)
-	}
+	png(file = "BML%03d.png", width = 500, height = 500)
 	for(i in 1:t){
 		new.grid = move(grid, i)
 		velocity[i] = length(grid) - sum(new.grid == grid)
 		grid = new.grid
 		class(grid) = "Grid"
-		print(plot(grid))
+		plot(grid)
 	}
-	return(velocity)
-}
 	system("convert -delay 0.5 *.png myMovie.gif")
 	invisible(file.remove(list.files(pattern = ".png")))
+	graphics.off()
+	plot(grid)
+	return(velocity)
+}
