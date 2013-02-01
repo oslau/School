@@ -1,3 +1,5 @@
+
+
 library(ggplot2)
 library(reshape)
 
@@ -42,12 +44,28 @@ next.pos = function(ij, n.row){
 swap = function(car.pos, potential, grid){
 	values = apply(potential, 1, function(x) grid[x[1], x[2]])
 	t = which(values == 0)
-	swap = cbind(empty = potential[t,], hasCar = car.pos[t,])
-	for(i in 1:length(t)){
-		grid[swap[i,1], swap[i,2]] = grid[swap[i,3], swap[i,4]]
-		grid[swap[i,3], swap[i,4]] = 0
+	if(length(t) == 0){
+		cat("No more moves available. Gridlock...", "\n")
+		return(grid)
 	}
-	return(grid)
+	else{
+		if(length(t) == 1){
+			swap = c(empty = potential[t,], hasCar = car.pos[t,])
+			for(i in 1:length(t)){
+				grid[swap[1], swap[2]] = grid[swap[3], swap[4]]
+				grid[swap[3], swap[4]] = 0
+			}
+		}
+		else{
+			swap = cbind(empty = potential[t,], hasCar = car.pos[t,])
+			for(i in 1:length(t)){
+				grid[swap[i,1], swap[i,2]] = grid[swap[i,3], swap[i,4]]
+				grid[swap[i,3], swap[i,4]] = 0
+			}	
+		}
+
+		return(grid)
+	}
 }
 
 move = function(grid, time){
