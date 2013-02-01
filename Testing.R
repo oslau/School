@@ -8,22 +8,24 @@ grid.r = 10 ##number of rows
 grid.c = 10 ##number of columns
 rho = .5	##proportion of grid filled
 
-##################
-###SIMPLE CALCS###
-##################
-ncars = round(rho * grid.r * grid.c, 0)	##total number of cars
-totcells = grid.r * grid.c	##total number of cells
-
 ##############################
 ###GENERATE RANDOM CAR GRID###
 ##############################
 
 genGrid = function(grid.r, grid.c, rho = .5){
+	###SIMPLE CALCS###
+	ncars = round(rho * grid.r * grid.c, 0)	##total number of cars
+	totcells = grid.r * grid.c	##total number of cells
+	###GENERATE GRID###
 	colors = c(rep(0, totcells-ncars), rep(1, ncars/2), rep(2, ncars/2))
 	grid = matrix(sample(colors, totcells), nrow = grid.r)
+	class(grid) = "Grid"
+	return(grid)
 }
 
-image(t(grid[grid.r:1,]), axes = FALSE, col = c("white", "blue", "red"))
+plot.Grid = function(grid){
+	image(t(grid[grid.r:1,]), axes = FALSE, col = c("white", "blue", "red"))
+	}
 #grid.coords = melt(grid)
 #names(grid.coords) <- c("i", "j", "col")
 
