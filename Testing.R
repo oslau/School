@@ -103,30 +103,26 @@ move = function(grid, time){
 	return(new.grid)
 }
 
-simTraffic = function(grid, t = 100){
-	velocity = integer(t)
-	png(file = "BML%03d.png", width = 500, height = 500)
-	for(i in 1:t){
-		new.grid = move(grid, i)
-		velocity[i] = length(grid) - (sum(new.grid == grid))
-		grid = new.grid
-		class(grid) = "Grid"
-		plot(grid)
-		if(i > 5){
-			if(all(velocity[(i - 5):i] == 0)){
-			cat("No movement for 5 time periods. \n Stopping now at time = ", i, "\n")
-			break}
-		}
-	}
-	system("convert -delay 0.5 *.png myMovie.gif")
-	invisible(file.remove(list.files(pattern = ".png")))
-	graphics.off()
-	plot(grid)
-	return(velocity)
+simTraffic = function(grid, t = 100, plotLast = TRUE){
+        velocity = integer(t)
+        for(i in 1:t){
+                new.grid = move(grid, i)
+                velocity[i] = length(grid) - sum(new.grid == grid)
+                grid = new.grid
+                class(grid) = "Grid"
+                if(i > 5){
+                        if(all(velocity[(i - 5):i] == 0)){
+                        cat("No movement for 5 time periods. \n Stopping now at time = ", i, "\n\n")
+                        break}
+                }
+        }
+        if(plotLast == TRUE){
+                plot(grid)}
+        return(velocity)
 }
 
-myList = c("genGrid.R", "move.R", "next.pos.R", "plot.Grid.R", "simTraffic.R", "swap.R", "summary.Grid.R")
-package.skeleton(name = "LauBML", code_files = myList)
+#myList = c("genGrid.R", "move.R", "next.pos.R", "plot.Grid.R", "simTraffic.R", "swap.R", "summary.Grid.R")
+#package.skeleton(name = "LauBML", code_files = myList)
 
-setwd("~/Documents/STA 242/Assignment2/")
-library("LauBML", lib.loc = './')
+#library("LauBML", lib.loc = "~/Documents/STA 242/Assignment2/")
+#library(profr)
